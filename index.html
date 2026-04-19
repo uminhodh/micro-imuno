@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fundamentos de Medicina 2</title>
+    <link href="./output.css" rel="stylesheet" />
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at top left, rgba(120, 130, 150, 0.10), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(180, 190, 210, 0.12), transparent 28%);
+      }
+
+      .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        animation: fadeUp 0.9s ease forwards;
+      }
+
+      .fade-up-delay-1 { animation-delay: 0.15s; }
+      .fade-up-delay-2 { animation-delay: 0.3s; }
+      .fade-up-delay-3 { animation-delay: 0.45s; }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .soft-float {
+        animation: softFloat 4s ease-in-out infinite;
+      }
+
+      @keyframes softFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+      }
+
+      .page-transition {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #d9dee7, #bfc8d6);
+        transform: translateX(-100%);
+        z-index: 9999;
+        pointer-events: none;
+      }
+
+      .page-transition.active {
+        animation: pageSlide 0.7s ease forwards;
+      }
+
+      @keyframes pageSlide {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(0%); }
+      }
+
+      .institution-card {
+        min-height: 145px;
+      }
+
+      .institution-value {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        line-height: 1.2;
+      }
+
+      .hero-panel {
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+      }
+
+      .soft-card {
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(160, 170, 185, 0.18);
+        backdrop-filter: blur(10px);
+      }
+
+      .muted-accent {
+        color: #607089;
+      }
+
+      .main-title {
+        color: #243142;
+      }
+
+      .primary-button {
+        background: #4f6278;
+        color: white;
+        border: none;
+      }
+
+      .primary-button:hover {
+        background: #445569;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-base-100 text-base-content">
+    <div id="transition-layer" class="page-transition"></div>
+
+    <main class="min-h-screen flex items-center justify-center px-6 py-12">
+      <section class="w-full max-w-6xl">
+        <div class="text-center mb-8 fade-up">
+          <p class="text-sm md:text-base uppercase tracking-[0.18em] text-base-content/50">
+            Universidade do Minho · Escola de Medicina
+          </p>
+        </div>
+
+        <div class="text-center fade-up fade-up-delay-1">
+          <h1 class="text-4xl md:text-6xl font-bold leading-tight main-title">
+            Fundamentos de Medicina 2
+          </h1>
+
+          <p class="mt-4 text-xl md:text-3xl font-semibold muted-accent">
+            Componente 2 · Fundamentos de Microbiologia
+          </p>
+        </div>
+
+        <div class="mt-10 card bg-white/80 border border-base-300 hero-panel fade-up fade-up-delay-2 rounded-3xl">
+          <div class="card-body p-6 md:p-10">
+            
+
+            <div class="divider text-base md:text-lg mt-6 mb-6 text-base-content/60">
+              Informação institucional
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div class="institution-card rounded-2xl p-6 soft-card">
+                <p class="text-sm text-base-content/55">Unidade curricular</p>
+                <h2 class="mt-3 text-2xl font-semibold institution-value main-title">
+                  Fundamentos de Medicina 2
+                </h2>
+              </div>
+
+              <div class="institution-card rounded-2xl p-6 soft-card">
+                <p class="text-sm text-base-content/55">Componente</p>
+                <h2 class="mt-3 text-2xl font-semibold institution-value main-title">
+                  Fundamentos de Microbiologia
+                </h2>
+              </div>
+
+              <div class="institution-card rounded-2xl p-6 soft-card">
+                <p class="text-sm text-base-content/55">Docente</p>
+                <h2 class="mt-3 text-2xl font-semibold institution-value main-title">
+                  Margarida Correia-Neves
+                </h2>
+              </div>
+            </div>
+
+            <p class="mt-8 text-center text-lg text-base-content/70">
+              Explora a trilha de aprendizagem para aceder aos materiais de estudo,
+              incluindo textos, imagens, vídeos e recursos educativos.
+            </p>
+
+            <div class="mt-8 flex justify-center">
+              <button
+                id="enterBtn"
+                class="btn btn-lg px-10 shadow-md hover:scale-105 transition duration-300 primary-button"
+              >
+                Entrar na trilha de aprendizagem
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="mt-10 flex flex-col items-center gap-4 text-center fade-up fade-up-delay-3">
+          <p class="text-sm md:text-base text-base-content/55">
+            Licenciatura em Medicina · Universidade do Minho
+          </p>
+
+          <img
+            src="./ECS-pt.png"
+            alt="Escola de Medicina da Universidade do Minho"
+            class="w-24 opacity-75 hover:opacity-95 transition soft-float"
+          />
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      const enterBtn = document.getElementById("enterBtn");
+      const transitionLayer = document.getElementById("transition-layer");
+
+      enterBtn.addEventListener("click", () => {
+        transitionLayer.classList.add("active");
+
+        setTimeout(() => {
+          window.location.href = "trilha.html";
+        }, 650);
+      });
+    </script>
+  </body>
+</html>
