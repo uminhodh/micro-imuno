@@ -215,21 +215,28 @@
             title: "Banda Desenhada e Diagrama",
             description: "Visualiza a banda desenhada e  o infográfico",
             render: () => `
-              <div class="space-y-4">
-                <div class="rounded-3xl overflow-hidden bg-white border border-base-200">
-                  <img
-                    src="./virus-bd.png"
-                    alt="Esquema ilustrado sobre vírus"
-                    class="w-full h-auto object-contain" />
+                <div class="space-y-6">
+
+                    <!-- IMAGEM 1 -->
+                    <div>
+                    <img
+                        src="./virus-bd.png"
+                        onclick="openImageModal('./virus-bd.png')"
+                        class="cursor-zoom-in rounded-3xl border border-base-200 hover:scale-[1.01] transition"
+                    />
+                    </div>
+
+                    <!-- IMAGEM 2 -->
+                    <div>
+                    <img
+                        src="./infografico-virus.png"
+                        onclick="openImageModal('./infografico-virus.png')"
+                        class="cursor-zoom-in rounded-3xl border border-base-200 hover:scale-[1.01] transition"
+                    />
+                    </div>
+
                 </div>
-                <div class="rounded-3xl overflow-hidden bg-white border border-base-200">
-                  <img
-                    src="./infografico-virus.png"
-                    alt="Esquema ilustrado sobre vírus"
-                    class="w-full h-auto object-contain" />
-                </div>
-              </div>
-            `
+                `
           },
           audio: {
             title: "Podcast",
@@ -246,10 +253,12 @@
 
                   <h3 class="text-xl font-semibold topic-title mb-2">Podcast 2</h3>
                   
-                  <audio controls class="w-full">
-                    <source src="./virus-audio-2.m4a" type="audio/mp4" />
-                    O teu navegador não suporta reprodução de áudio.
-                  </audio>
+                  <iframe
+                    src="https://drive.google.com/file/d/1GUyv069Vol93LAYjFPCdYTOG9G6MyyAC/preview"
+                    width="100%"
+                    height="120"
+                    allow="autoplay">
+                  </iframe>
                 </div>
               </div>
             `
@@ -333,6 +342,23 @@
       });
 
       loadContent("virus", "glossario");
+    </script>
+    <dialog id="imageModal" class="modal">
+        <div class="modal-box max-w-5xl bg-black p-2">
+          <img id="modalImage" src="" class="w-full rounded-xl" />
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+    </dialog>
+    <script>
+        function openImageModal(src) {
+          const modal = document.getElementById("imageModal");
+          const img = document.getElementById("modalImage");
+      
+          img.src = src;
+          modal.showModal();
+        }
     </script>
   </body>
 </html>
