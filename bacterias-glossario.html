@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glossário Interativo — Bactérias: Estrutura e Função</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --accent-2:#dbeafe;
+      --border:#e5e7eb;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#eef4ff 0%, var(--bg) 100%);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:32px 20px 48px;
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns: 1fr auto auto;
+      gap:12px;
+      margin:20px 0 24px;
+    }
+
+    .search-box, .select-box, .btn{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+    }
+
+    .search-box input, .select-box select{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      padding:15px 16px;
+      font-size:1rem;
+      color:var(--text);
+    }
+
+    .btn{
+      padding:0 16px;
+      cursor:pointer;
+      font-weight:700;
+      color:var(--accent);
+      min-height:52px;
+      transition:transform .15s ease, background .15s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      background:#f8fbff;
+    }
+
+    .stats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .badge{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:10px 14px;
+      color:var(--muted);
+      font-size:.95rem;
+      box-shadow:var(--shadow);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 34px rgba(0,0,0,.12);
+    }
+
+    .card-header{
+      padding:18px 18px 14px;
+      cursor:pointer;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .term-number{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:var(--accent-2);
+      color:var(--accent);
+      font-weight:700;
+      flex-shrink:0;
+    }
+
+    .title-wrap{
+      flex:1;
+    }
+
+    .term-title{
+      margin:0 0 6px;
+      font-size:1.08rem;
+      line-height:1.3;
+    }
+
+    .term-sub{
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .toggle-icon{
+      font-size:1.2rem;
+      color:var(--accent);
+      transition:transform .2s ease;
+      user-select:none;
+    }
+
+    .card.open .toggle-icon{
+      transform:rotate(45deg);
+    }
+
+    .card-content{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .28s ease;
+      border-top:1px solid transparent;
+    }
+
+    .card.open .card-content{
+      border-top:1px solid var(--border);
+      max-height:500px;
+    }
+
+    .content-inner{
+      padding:16px 18px 18px;
+    }
+
+    .label{
+      display:inline-block;
+      font-size:.82rem;
+      font-weight:700;
+      color:var(--accent);
+      background:var(--accent-2);
+      padding:6px 10px;
+      border-radius:999px;
+      margin-bottom:10px;
+    }
+
+    .definition{
+      margin:0;
+      line-height:1.6;
+    }
+
+    .extras{
+      margin-top:12px;
+      padding-left:18px;
+      color:var(--text);
+    }
+
+    .extras li{
+      margin:6px 0;
+      line-height:1.5;
+    }
+
+    .highlight{
+      background:#fff3b0;
+      padding:0 2px;
+      border-radius:4px;
+    }
+
+    .empty{
+      display:none;
+      text-align:center;
+      color:var(--muted);
+      background:var(--card);
+      border:1px dashed var(--border);
+      border-radius:18px;
+      padding:32px 20px;
+      box-shadow:var(--shadow);
+      margin-top:8px;
+    }
+
+    footer{
+      margin-top:28px;
+      text-align:center;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    @media (max-width: 760px){
+      .toolbar{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="toolbar">
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Pesquisar termo ou definição..." />
+      </div>
+
+      <div class="select-box">
+        <select id="sortSelect" aria-label="Ordenar termos">
+          <option value="number">Ordenar por número</option>
+          <option value="az">Ordenar de A a Z</option>
+        </select>
+      </div>
+
+      <button class="btn" id="toggleAllBtn" type="button">Abrir todos</button>
+    </section>
+
+    <div class="stats">
+      <div class="badge">Total de termos: <strong id="totalCount">24</strong></div>
+      <div class="badge">Resultados visíveis: <strong id="visibleCount">24</strong></div>
+    </div>
+
+    <div class="grid" id="glossaryGrid"></div>
+    <div class="empty" id="emptyState">Nenhum termo encontrado. Tenta outra palavra-chave.</div>
+
+    <footer></footer>
+  </div>
+
+  <script>
+    const terms = [
+      {
+        number: 1,
+        title: "Bactéria",
+        definition: "Microrganismo unicelular procariota, geralmente pequeno, que se replica por fissão binária e pode viver como comensal, oportunista ou patogénico."
+      },
+      {
+        number: 2,
+        title: "Célula procariota",
+        definition: "Tipo celular sem membrana nuclear, sem mitocôndrias, sem complexo de Golgi e sem retículo endoplasmático."
+      },
+      {
+        number: 3,
+        title: "Nucleóide",
+        definition: "Região da célula bacteriana onde se encontra o material genético, sem estar delimitada por membrana nuclear."
+      },
+      {
+        number: 4,
+        title: "Ribossomas 70S",
+        definition: "Ribossomas típicos das bactérias, constituídos pelas subunidades 50S e 30S."
+      },
+      {
+        number: 5,
+        title: "Fissão binária",
+        definition: "Processo de replicação bacteriana em que uma célula origina duas células-filhas."
+      },
+      {
+        number: 6,
+        title: "Peptidoglicano",
+        definition: "Componente estrutural rígido da parede bacteriana, importante para a forma e resistência da bactéria."
+      },
+      {
+        number: 7,
+        title: "Mycoplasma",
+        definition: "Género bacteriano excecional por não possuir parede celular clássica com peptidoglicano e por apresentar esteróis na membrana."
+      },
+      {
+        number: 8,
+        title: "Gram positivo",
+        definition: "Bactéria com parede espessa em peptidoglicano, que retém o cristal violeta na coloração de Gram e aparece roxa.",
+        extras: [
+          "Apresenta ácidos teicóicos e lipoteicóicos",
+          "Não possui membrana externa"
+        ]
+      },
+      {
+        number: 9,
+        title: "Gram negativo",
+        definition: "Bactéria com camada mais fina de peptidoglicano e membrana externa, que não retém o cristal violeta e cora de rosa com safranina.",
+        extras: [
+          "Possui membrana externa",
+          "Contém LPS",
+          "Apresenta porinas"
+        ]
+      },
+      {
+        number: 10,
+        title: "Álcool-ácido resistente",
+        definition: "Tipo de bactéria cuja parede rica em lípidos, nomeadamente ácidos micólicos, dificulta a coloração de Gram e favorece colorações específicas como Ziehl-Neelsen."
+      },
+      {
+        number: 11,
+        title: "Coloração de Gram",
+        definition: "Método laboratorial que distingue bactérias Gram positivas e Gram negativas com base na estrutura da parede bacteriana."
+      },
+      {
+        number: 12,
+        title: "Membrana externa",
+        definition: "Estrutura presente apenas nas bactérias Gram negativas, que funciona como barreira e contém LPS."
+      },
+      {
+        number: 13,
+        title: "Porinas",
+        definition: "Proteínas da membrana externa das bactérias Gram negativas que permitem a passagem de pequenos metabolitos e antibióticos hidrófilos."
+      },
+      {
+        number: 14,
+        title: "Lipopolissacarídeo (LPS)",
+        definition: "Componente da membrana externa das bactérias Gram negativas, formado por lípido A, core polissacárido e antigénio O."
+      },
+      {
+        number: 15,
+        title: "Lípido A",
+        definition: "Porção do LPS responsável pela atividade endotoxínica."
+      },
+      {
+        number: 16,
+        title: "Antigénio O",
+        definition: "Parte polissacárida externa do LPS, antigenicamente variável, útil para distinguir serotipos."
+      },
+      {
+        number: 17,
+        title: "Endotoxina",
+        definition: "Componente associado ao LPS que ativa fortemente mecanismos imunológicos e inflamatórios, podendo também ativar a cascata de coagulação."
+      },
+      {
+        number: 18,
+        title: "Fímbrias ou pili",
+        definition: "Estruturas de adesão que permitem à bactéria fixar-se a recetores do hospedeiro e colonizar tecidos."
+      },
+      {
+        number: 19,
+        title: "Flagelo",
+        definition: "Estrutura bacteriana associada à motilidade."
+      },
+      {
+        number: 20,
+        title: "Biofilme",
+        definition: "Comunidade bacteriana aderente a superfícies, envolvida por matriz extracelular, que favorece persistência e adesão."
+      },
+      {
+        number: 21,
+        title: "Cápsula",
+        definition: "Estrutura externa que protege a bactéria da fagocitose e pode aumentar a virulência."
+      },
+      {
+        number: 22,
+        title: "Exotoxina",
+        definition: "Proteína bacteriana tóxica, frequentemente codificada por plasmídeos ou cromossoma, capaz de provocar lise celular, disfunção ou atuar como superantigénio."
+      },
+      {
+        number: 23,
+        title: "Plasmídeo",
+        definition: "Molécula de DNA extracromossómico cuja replicação é independente da do cromossoma e que pode transportar genes de resistência, toxinas ou vias metabólicas."
+      },
+      {
+        number: 24,
+        title: "Conjugação",
+        definition: "Transferência genética entre bactérias através de um pili sexual.",
+        extras: [
+          "Importante na disseminação de resistência a antibióticos",
+          "Pode transferir fatores de virulência codificados em plasmídeos"
+        ]
+      },
+      {
+        number: 25,
+        title: "Transformação",
+        definition: "Aquisição de DNA livre do meio por uma bactéria competente e incorporação desse material no genoma."
+      },
+      {
+        number: 26,
+        title: "Transdução",
+        definition: "Transferência de material genético bacteriano mediada por bacteriófagos."
+      },
+      {
+        number: 27,
+        title: "Esporo bacteriano",
+        definition: "Estrutura de resistência produzida por algumas bactérias, muito resistente à secagem, temperatura, agentes químicos e outras condições adversas.",
+        extras: [
+          "Presente em algumas Gram positivas, como Bacillus e Clostridium",
+          "Pode germinar quando as condições voltam a ser favoráveis"
+        ]
+      },
+      {
+        number: 28,
+        title: "Aeróbio obrigatório",
+        definition: "Bactéria que necessita de oxigénio para crescer."
+      },
+      {
+        number: 29,
+        title: "Anaeróbio estrito",
+        definition: "Bactéria que não tolera oxigénio e cresce apenas na sua ausência."
+      },
+      {
+        number: 30,
+        title: "Anaeróbio facultativo",
+        definition: "Bactéria que pode crescer com ou sem oxigénio."
+      }
+    ];
+
+    const glossaryGrid = document.getElementById("glossaryGrid");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
+    const toggleAllBtn = document.getElementById("toggleAllBtn");
+    const totalCount = document.getElementById("totalCount");
+    const visibleCount = document.getElementById("visibleCount");
+    const emptyState = document.getElementById("emptyState");
+
+    let areAllOpen = false;
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function highlightText(text, query) {
+      if (!query) return escapeHtml(text);
+      const safe = escapeHtml(text);
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`(${escapedQuery})`, "gi");
+      return safe.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function getFilteredAndSortedTerms() {
+      const query = searchInput.value.trim().toLowerCase();
+      const sortMode = sortSelect.value;
+
+      let filtered = terms.filter(term => {
+        const extraText = (term.extras || []).join(" ").toLowerCase();
+        return (
+          term.title.toLowerCase().includes(query) ||
+          term.definition.toLowerCase().includes(query) ||
+          extraText.includes(query) ||
+          String(term.number).includes(query)
+        );
+      });
+
+      if (sortMode === "az") {
+        filtered.sort((a, b) => a.title.localeCompare(b.title, "pt"));
+      } else {
+        filtered.sort((a, b) => a.number - b.number);
+      }
+
+      return filtered;
+    }
+
+    function renderGlossary() {
+      const query = searchInput.value.trim();
+      const data = getFilteredAndSortedTerms();
+
+      glossaryGrid.innerHTML = "";
+      totalCount.textContent = terms.length;
+      visibleCount.textContent = data.length;
+      emptyState.style.display = data.length ? "none" : "block";
+
+      data.forEach(term => {
+        const card = document.createElement("article");
+        card.className = "card";
+        if (areAllOpen) card.classList.add("open");
+
+        card.innerHTML = `
+          <div class="card-header" role="button" tabindex="0" aria-expanded="${areAllOpen ? 'true' : 'false'}">
+            <div class="term-number">${term.number}</div>
+            <div class="title-wrap">
+              <h2 class="term-title">${highlightText(term.title, query)}</h2>
+              <p class="term-sub">Clica para ver a definição</p>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="card-content">
+            <div class="content-inner">
+              <span class="label">Definição</span>
+              <p class="definition">${highlightText(term.definition, query)}</p>
+              ${term.extras ? `
+                <ul class="extras">
+                  ${term.extras.map(item => `<li>${highlightText(item, query)}</li>`).join("")}
+                </ul>
+              ` : ""}
+            </div>
+          </div>
+        `;
+
+        const header = card.querySelector(".card-header");
+
+        function toggleCard() {
+          card.classList.toggle("open");
+          header.setAttribute("aria-expanded", card.classList.contains("open") ? "true" : "false");
+        }
+
+        header.addEventListener("click", toggleCard);
+        header.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            toggleCard();
+          }
+        });
+
+        glossaryGrid.appendChild(card);
+      });
+    }
+
+    toggleAllBtn.addEventListener("click", () => {
+      areAllOpen = !areAllOpen;
+      toggleAllBtn.textContent = areAllOpen ? "Fechar todos" : "Abrir todos";
+      renderGlossary();
+    });
+
+    searchInput.addEventListener("input", renderGlossary);
+    sortSelect.addEventListener("change", renderGlossary);
+
+    renderGlossary();
+  </script>
+</body>
+</html>

@@ -65,7 +65,7 @@
 
       .viewer-frame {
         width: 100%;
-        min-height: 70vh;
+        min-height: 82vh;
         border: none;
         border-radius: 18px;
         background: white;
@@ -280,22 +280,78 @@
           glossario: {
             title: "Glossário",
             description: "Espaço reservado para o glossário de bactérias.",
-            render: () => placeholder("Glossário de bactérias", "Quando me enviares o glossário de bactérias, eu ligo aqui diretamente.")
+            render: () => `
+                <iframe
+                  class="viewer-frame"
+                  src="./bacterias-glossario.html"
+                  title="Glossário de bactérias">
+                </iframe>
+              `
           },
           imagem: {
-            title: "Imagem",
-            description: "Espaço reservado para a imagem de bactérias.",
-            render: () => placeholder("Imagem de bactérias", "Aqui pode entrar uma imagem, esquema ou infográfico.")
+            title: "Banda Desenhada e Diagrama",
+            description: "Visualiza a banda desenhada e  o infográfico",
+            render: () => `
+                <div class="space-y-6">
+
+                    <!-- IMAGEM 1 -->
+                    <div>
+                    <img
+                        src="./bacteria-bd.png"
+                        onclick="openImageModal('./bacteria-bd.png')"
+                        class="cursor-zoom-in rounded-3xl border border-base-200 hover:scale-[1.01] transition"
+                    />
+                    </div>
+
+                    <!-- IMAGEM 2 -->
+                    <div>
+                    <img
+                        src="./infografico-bacteria.png"
+                        onclick="openImageModal('./infografico-bacteria.png')"
+                        class="cursor-zoom-in rounded-3xl border border-base-200 hover:scale-[1.01] transition"
+                    />
+                    </div>
+
+                </div>
+                `
           },
           audio: {
-            title: "Áudio",
-            description: "Espaço reservado para o áudio de bactérias.",
-            render: () => placeholder("Áudio de bactérias", "Aqui pode entrar um ficheiro áudio com explicação do conteúdo.")
+            title: "Podcast",
+            description: "Escuta o conteúdo áudio sobre bactérias.",
+            render: () => `
+              <div class="space-y-4">
+                <div class="rounded-3xl bg-white border border-base-200 p-6">
+                  <h3 class="text-xl font-semibold topic-title mb-2">Podcast 1</h3>
+                  
+                  <iframe
+                    src="https://drive.google.com/file/d/1CDKCvedFI4-1cUKqiXxNumu3DjIB6Woz/preview"
+                    width="100%"
+                    height="120"
+                    allow="autoplay">
+                  </iframe>
+
+                  <h3 class="text-xl font-semibold topic-title mb-2">Podcast 2</h3>
+                  
+                  <iframe
+                    src="https://drive.google.com/file/d/14NsAyKn9cl9hlSLw6Cx8FUeGK2jfuedv/preview"
+                    width="100%"
+                    height="120"
+                    allow="autoplay">
+                  </iframe>
+                </div>
+              </div>
+            `
           },
           mapa: {
             title: "Mapa mental",
-            description: "Espaço reservado para o mapa mental de bactérias.",
-            render: () => placeholder("Mapa mental de bactérias", "Quando me enviares o ficheiro, eu deixo esta secção funcional.")
+            description: "Explora a organização dos conceitos principais sobre bactérias.",
+            render: () => `
+              <iframe
+                class="viewer-frame"
+                src="./bacteria-mapa.html"
+                title="Mapa mental de vírus">
+              </iframe>
+            `
           }
         }
       };

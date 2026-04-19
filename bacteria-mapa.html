@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa mental — Bactérias</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      background:
+        radial-gradient(circle at top left, rgba(120, 130, 150, 0.08), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(180, 190, 210, 0.10), transparent 28%),
+        #f8fafc;
+      color: #243142;
+    }
+
+    .map-shell {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #mindmap {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .controls {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      z-index: 20;
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .control-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 12px;
+      background: #eef2f7;
+      color: #243142;
+      font-size: 22px;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .control-btn:hover {
+      background: #dde5ef;
+      transform: translateY(-1px);
+    }
+
+    .hint {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 20;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      backdrop-filter: blur(8px);
+      color: #475569;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="map-shell">
+    <div class="controls">
+      <button class="control-btn" id="zoomInBtn" title="Aumentar">+</button>
+      <button class="control-btn" id="zoomOutBtn" title="Diminuir">−</button>
+      <button class="control-btn" id="fitBtn" title="Centrar">⌂</button>
+    </div>
+
+    <div class="hint">
+      Arrasta para mover · ctrl + roda do rato para zoom · clique nos nós para expandir
+    </div>
+
+    <svg id="mindmap"></svg>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
+
+  <script>
+    const rawData = {
+      content: "Bactérias",
+      children: [
+        {
+          content: "Relação bactéria–hospedeiro",
+          children: [
+            {
+              content: "Tipos",
+              children: [
+                { content: "Comensais", children: [{ content: "Fazem parte da flora normal", children: [] }] },
+                { content: "Oportunistas", children: [{ content: "Causam doença quando há fragilidade do hospedeiro", children: [] }, { content: "Ex.: imunossupressão", children: [] }] },
+                { content: "Sempre patogénicas", children: [{ content: "Causam doença mesmo em indivíduos saudáveis", children: [] }] }
+              ]
+            },
+            {
+              content: "Importância clínica",
+              children: [
+                { content: "Infeções hospitalares", children: [] },
+                { content: "Infeções em imunodeprimidos", children: [] },
+                { content: "Microbiota normal vs doença", children: [] }
+              ]
+            }
+          ]
+        },
+        {
+          content: "Estrutura bacteriana",
+          children: [
+            {
+              content: "Características-chave",
+              children: [
+                { content: "Procariotas", children: [{ content: "Sem núcleo", children: [] }, { content: "Sem organelos", children: [] }] },
+                { content: "DNA no nucleóide", children: [] },
+                { content: "Plasmídeos", children: [{ content: "Podem transportar genes de resistência e virulência", children: [] }] },
+                { content: "Parede com peptidoglicano", children: [] },
+                { content: "Ribossomas 70S", children: [] },
+                { content: "Reprodução por divisão binária", children: [] }
+              ]
+            },
+            {
+              content: "Importância clínica",
+              children: [
+                { content: "Antibióticos atuam nestas estruturas", children: [] },
+                { content: "β-lactâmicos", children: [{ content: "Atuam na parede celular", children: [] }] },
+                { content: "Aminoglicosídeos e macrólidos", children: [{ content: "Atuam nos ribossomas", children: [] }] }
+              ]
+            }
+          ]
+        },
+        {
+          content: "Gram positivo vs Gram negativo",
+          children: [
+            {
+              content: "Gram positivo",
+              children: [
+                { content: "Parede espessa de peptidoglicano", children: [] },
+                { content: "Cor roxa na coloração de Gram", children: [] }
+              ]
+            },
+            {
+              content: "Gram negativo",
+              children: [
+                { content: "Parede fina de peptidoglicano", children: [] },
+                { content: "Membrana externa com LPS", children: [] },
+                { content: "Cor rosa na coloração de Gram", children: [] }
+              ]
+            },
+            {
+              content: "Relevância clínica",
+              children: [
+                { content: "Guia inicial da antibioterapia", children: [] },
+                { content: "Gram negativos tendem a ser mais resistentes", children: [] },
+                { content: "LPS associa-se a maior gravidade", children: [] }
+              ]
+            }
+          ]
+        },
+        {
+          content: "Endotoxina (LPS)",
+          children: [
+            { content: "Ativa intensamente o sistema imune", children: [] },
+            { content: "Pode desencadear", children: [
+              { content: "Febre", children: [] },
+              { content: "Coagulação intravascular disseminada (CID)", children: [] },
+              { content: "Choque séptico", children: [] }
+            ]},
+            { content: "Essencial para compreender sépsis por Gram negativos", children: [] }
+          ]
+        },
+        {
+          content: "Fatores de virulência",
+          children: [
+            { content: "Cápsula", children: [{ content: "Evita fagocitose", children: [] }] },
+            { content: "Fímbrias / pili", children: [{ content: "Permitem adesão", children: [] }, { content: "Ex.: ITU por E. coli", children: [] }] },
+            { content: "Flagelos", children: [{ content: "Conferem mobilidade", children: [] }] },
+            { content: "Biofilme", children: [{ content: "Aumenta resistência", children: [] }, { content: "Ex.: cateteres e dispositivos", children: [] }] },
+            {
+              content: "Importância clínica",
+              children: [
+                { content: "Infeções urinárias", children: [{ content: "Dependem de adesão bacteriana", children: [] }] },
+                { content: "Infeções associadas a dispositivos", children: [{ content: "Relacionadas com biofilmes", children: [] }] },
+                { content: "Evasão imune", children: [{ content: "Favorece infeções persistentes", children: [] }] }
+              ]
+            }
+          ]
+        },
+        {
+          content: "Toxinas bacterianas",
+          children: [
+            { content: "Endotoxinas", children: [{ content: "Fazem parte da parede das Gram negativas", children: [] }] },
+            { content: "Exotoxinas", children: [{ content: "São proteínas secretadas", children: [] }, { content: "Podem causar destruição celular", children: [] }, { content: "Podem causar disfunção", children: [{ content: "Ex.: tétano e botulismo", children: [] }] }] },
+            { content: "Superantigénios", children: [{ content: "Podem provocar choque tóxico", children: [] }] },
+            { content: "Muitos sintomas clínicos resultam da toxina e não apenas da bactéria", children: [] }
+          ]
+        },
+        {
+          content: "Resistência antibiótica",
+          children: [
+            { content: "Mecanismos", children: [
+              { content: "Plasmídeos", children: [] },
+              { content: "Conjugação", children: [] },
+              { content: "Mutações", children: [] }
+            ]},
+            { content: "Exemplo importante", children: [
+              { content: "Staphylococcus aureus", children: [{ content: "Resistência à penicilina", children: [] }, { content: "Pode exigir vancomicina", children: [] }] }
+            ]},
+            { content: "Impacto clínico", children: [
+              { content: "Escolha do antibiótico", children: [] },
+              { content: "Infeções hospitalares", children: [] },
+              { content: "Disseminação de resistência", children: [] }
+            ]}
+          ]
+        },
+        {
+          content: "Metabolismo e oxigénio",
+          children: [
+            { content: "Tipos", children: [
+              { content: "Aeróbios", children: [] },
+              { content: "Anaeróbios", children: [] },
+              { content: "Facultativos", children: [] }
+            ]},
+            { content: "Importância clínica", children: [
+              { content: "Localização da infeção", children: [] },
+              { content: "Escolha de antibiótico", children: [] },
+              { content: "Interpretação de culturas", children: [] }
+            ]}
+          ]
+        },
+        {
+          content: "Esporos bacterianos",
+          children: [
+            { content: "Muito resistentes", children: [
+              { content: "Calor", children: [] },
+              { content: "Desidratação", children: [] },
+              { content: "Agentes químicos", children: [] }
+            ]},
+            { content: "Exemplos", children: [
+              { content: "Clostridium", children: [] },
+              { content: "Bacillus", children: [] }
+            ]},
+            { content: "Clínica", children: [
+              { content: "Tétano", children: [] },
+              { content: "Antraz", children: [] },
+              { content: "Esterilização hospitalar", children: [] }
+            ]}
+          ]
+        },
+        {
+          content: "Ideia central",
+          children: [
+            { content: "A estrutura bacteriana determina", children: [
+              { content: "Virulência", children: [] },
+              { content: "Forma de transmissão", children: [] },
+              { content: "Diagnóstico", children: [] },
+              { content: "Resposta ao tratamento", children: [] }
+            ]}
+          ]
+        }
+      ]
+    };
+
+    function collapseFromLevel(node, level = 0) {
+      if (!node.children?.length) return node;
+
+      if (level >= 2) {
+        node.payload = node.payload || {};
+        node.payload.fold = 1;
+      }
+
+      node.children.forEach(child => collapseFromLevel(child, level + 1));
+      return node;
+    }
+
+    const data = collapseFromLevel(rawData);
+
+    const { markmap } = window;
+    const mm = markmap.Markmap.create("svg#mindmap", {
+      autoFit: true,
+      fitRatio: 0.92,
+      maxWidth: 260,
+      spacingVertical: 14,
+      spacingHorizontal: 90,
+      paddingX: 16,
+      duration: 300,
+      zoom: true,
+      pan: true,
+      colorFreezeLevel: 2,
+      initialExpandLevel: 2
+    }, data);
+
+    function fitMap() {
+      if (typeof mm.fit === "function") {
+        mm.fit();
+      }
+    }
+
+    function zoomBy(factor) {
+      const svg = d3.select("#mindmap");
+      const currentTransform = d3.zoomTransform(svg.node());
+      const nextScale = Math.max(0.5, Math.min(2.4, currentTransform.k * factor));
+
+      svg.transition().duration(180).call(
+        mm.zoom.transform,
+        d3.zoomIdentity
+          .translate(currentTransform.x, currentTransform.y)
+          .scale(nextScale)
+      );
+    }
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => zoomBy(1.2));
+    document.getElementById("zoomOutBtn").addEventListener("click", () => zoomBy(0.85));
+    document.getElementById("fitBtn").addEventListener("click", fitMap);
+
+    window.addEventListener("load", () => {
+      setTimeout(fitMap, 220);
+    });
+
+    window.addEventListener("resize", () => {
+      setTimeout(fitMap, 120);
+    });
+  </script>
+</body>
+</html>
